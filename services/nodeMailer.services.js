@@ -1,28 +1,29 @@
 import nodemailer from 'nodemailer';
+import dotenv from 'dotenv';
+dotenv.config();
 
-const mailService = ()=>{
+export const mailService = async(mailreceiver, message)=>{
     let mailTransporter=nodemailer.createTransport({
     service:'gmail',
     auth:{
-        user:"ravikeerthy1807@gmail.com",
-        pass:"lqhi ngjl alfh hmpy"
+        user:process.env.EMAIL_USER,
+        pass:process.env.EMAIL_PASS
     }
 })
 let details = {
-    from:"ravikeerthy1807@gmail.com",
-    to:"ravikeerthy1807@gmail.com",
-    subject:"Login Message",
-    text:"Login Successfully"
+    from:process.env.EMAIL_USER,
+    to:mailreceiver,
+    subject:"Password Reset",
+    html:message
 }
 
-mailTransporter.sendMail(details, (err) =>{
+const info = await mailTransporter.sendMail(details, (err) =>{
     if(err){
         console.log("Check Credentials");
     }else{
-        console.log("Mail sent successfully");
+        console.log("Mail sent successfully", info.response);
     }
 })
 
 }
 
-export default mailService; 
